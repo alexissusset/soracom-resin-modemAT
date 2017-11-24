@@ -44,9 +44,14 @@ RUN apt-get update && apt-get install -yq  \
 # Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
 RUN systemctl disable ModemManager.service
 RUN systemctl disable NetworkManager.service
+RUN systemctl disable network-manager.service
+RUN systemctl disable NetworkManager-dispatcher.service
+RUN systemctl disable dbus-org.freedesktop.ModemManager1.service
 RUN systemctl mask ModemManager.service
 RUN systemctl mask NetworkManager.service
-
+RUN systemctl mask network-manager.service
+RUN systemctl mask NetworkManager-dispatcher.service
+RUN systemctl mask dbus-org.freedesktop.ModemManager1.service
 
 # Start our application
 CMD ["bash", "/usr/src/app/start.sh"]
