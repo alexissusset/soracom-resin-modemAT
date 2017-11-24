@@ -19,41 +19,41 @@ if [ $? -eq 0 ]; then
 fi
 
 # Check if we should disable non-cellular connectivity
-#if [[ ${CELLULAR_ONLY} == "1" ]]; then
-#	ls /sys/class/net | grep -q wlan0
-#	if [[ $? -eq 0 ]]; then
-#		ifconfig wlan0 down
-#	fi
-#	ls /sys/class/net | grep -q eth0
-#	if [[ $? -eq 0 ]]; then
-#		ifconfig eth0 down
-#	fi
-#	if [[ -n "${MODEM_NUMBER}" ]]; then
-#		# Check to see if Modem successfully connected
-#		mmcli -m ${MODEM_NUMBER} | grep -q "state: 'connected'"
-#		if [ $? -eq 0 ]; then
-#			CONNECTED=1
-#		fi
-#	else
-#		curl -s --connect-timeout 52 http://ifconfig.io
-#		if [ $? -eq 0 ]; then
-#			CONNECTED=1
-#		fi
-#	fi
-#	if [[ -n "${CONNECTED}" ]]; then
-#		echo "Device successfully connected over Cellular"
-#	else
-#		echo "Re-enabling Ethernet and WiFi as device didn't have internet without it"
-#		ls /sys/class/net | grep -q eth0
-#		if [[ $? -eq 0 ]]; then
-#			ifconfig eth0 up
-#		fi
-#		ls /sys/class/net | grep -q wlan0
-#		if [[ $? -eq 0 ]]; then
-#			ifconfig wlan0 up
-#		fi
-#	fi
-#fi
+if [[ ${CELLULAR_ONLY} == "1" ]]; then
+	ls /sys/class/net | grep -q wlan0
+	if [[ $? -eq 0 ]]; then
+		ifconfig wlan0 down
+	fi
+	ls /sys/class/net | grep -q eth0
+	if [[ $? -eq 0 ]]; then
+		ifconfig eth0 down
+	fi
+	if [[ -n "${MODEM_NUMBER}" ]]; then
+		# Check to see if Modem successfully connected
+		mmcli -m ${MODEM_NUMBER} | grep -q "state: 'connected'"
+		if [ $? -eq 0 ]; then
+			CONNECTED=1
+		fi
+	else
+		curl -s --connect-timeout 52 http://ifconfig.io
+		if [ $? -eq 0 ]; then
+			CONNECTED=1
+		fi
+	fi
+	if [[ -n "${CONNECTED}" ]]; then
+		echo "Device successfully connected over Cellular"
+	else
+		echo "Re-enabling Ethernet and WiFi as device didn't have internet without it"
+		ls /sys/class/net | grep -q eth0
+		if [[ $? -eq 0 ]]; then
+			ifconfig eth0 up
+		fi
+		ls /sys/class/net | grep -q wlan0
+		if [[ $? -eq 0 ]]; then
+			ifconfig wlan0 up
+		fi
+	fi
+fi
 echo "App Started"
 
 # Run connection check script every 15mins
