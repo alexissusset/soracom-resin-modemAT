@@ -67,5 +67,5 @@ do
 		echo `mmcli -m ${MODEM_NUMBER} --command="AT+CSQ"`
 	fi
 	sleep 300;
-	#/usr/src/app/reconnect.sh
+	/usr/src/app/reconnect.sh
 done
