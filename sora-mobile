@@ -1,0 +1,17 @@
+[connection]
+id=Soracom
+type=gsm
+
+[gsm]
+apn=soracom.io
+number=*99***1#
+password-flags=1
+
+[ipv4]
+dns-search=
+method=auto
+
+[ipv6]
+addr-gen-mode=stable-privacy
+dns-search=
+method=auto

@@ -1,0 +1,50 @@
+# Base resin image containing everything needed to run NodeJS
+FROM resin/%%RESIN_MACHINE_NAME%%-python:slim
+
+MAINTAINER Alexis Susset <alexis@soraocom.io>
+
+#switch on systemd init system in container
+ENV INITSYSTEM on
+
+# Override the default entry.sh and add udev rules for Huawei modems
+# Copy all other scripts and files
+RUN mkdir -p /usr/src/app
+COPY src/entry.sh /usr/bin/entry.sh 
+#COPY udev-rules/* /lib/udev/rules.d/
+COPY motd /etc/motd
+COPY src/reconnect.sh /usr/src/app
+COPY src/start.sh /usr/src/app
+COPY src/bashrc /root/.bashrc
+RUN chmod +x /usr/bin/entry.sh
+RUN chmod +x /usr/src/app/reconnect.sh
+RUN chmod +x /usr/src/app/start.sh
+
+# Copy Python Application
+COPY python_src/main.py /usr/src/app
+COPY python_src/requirements.txt /usr/src/app
+
+WORKDIR /usr/src/app
+
+# Install the following packages:
+#  curl: used to test if the device has a network connection
+#  dropbear: ssh server to access the device remotely (useful for troubleshooting, alternatively you can use resin.io CLI or console)
+#  smstools: tool to handle SMS
+#  wireless-tools: tool to check WiFi based connectivity
+#  net-tools: tool to get older unix commands such as ifconfig
+#  modemmanager: Cellular Modem Manager CLI, used to manage connected modems
+#  network-manager: Network Manager CLI, used to manage connections
+#  python, libdbus-1-dev, libexpat1-dev, build-essential: needed for NodeJS DBUS client build via node-gyp
+
+RUN apt-get update && apt-get install -yq  \
+	curl dropbear smstools wireless-tools net-tools \
+	network-manager modemmanager && \
+	apt-get clean && rm -rf /tmp/* && \
+	pip install -r requirements.txt
+
+# Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
+RUN systemctl disable ModemManager.service
+RUN systemctl mask ModemManager.service
+
+
+# Start our application
+CMD ["bash", "/usr/src/app/start.sh"]

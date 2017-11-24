@@ -1,0 +1,5 @@
+export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+mmcli -L | grep -q Modem
+if [ $? -eq 0 ]; then
+	export MODEM_NUMBER=`mmcli -L | grep Modem | sed -e 's/\//\ /g' | awk '{print $5}'`
+fi
