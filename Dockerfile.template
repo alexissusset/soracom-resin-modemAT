@@ -31,11 +31,11 @@ WORKDIR /usr/src/app
 #  smstools: tool to handle SMS
 #  wireless-tools: tool to check WiFi based connectivity
 #  net-tools: tool to get older unix commands such as ifconfig
+#  usbutils: tools to check attached USB devices
 #  modemmanager: Cellular Modem Manager CLI, used to manage connected modems
-#  python, libdbus-1-dev, libexpat1-dev, build-essential: needed for NodeJS DBUS client build via node-gyp
 
 RUN apt-get update && apt-get install -yq  \
-	curl dropbear smstools wireless-tools net-tools modemmanager && \
+	curl dropbear smstools wireless-tools net-tools usbutils modemmanager && \
 	apt-get clean && rm -rf /tmp/* && pip install -r requirements.txt
 
 # Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
