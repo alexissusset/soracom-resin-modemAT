@@ -19,7 +19,7 @@ if [ $? -eq 0 ]; then
 fi
 
 # Check if we should disable non-cellular connectivity
-if [[ ${CELLULAR_ONLY} == "1" ]]; then
+if [[ -n ${CELLULAR_ONLY} ]]; then
 	ls /sys/class/net | grep -q wlan0
 	if [[ $? -eq 0 ]]; then
 		ifconfig wlan0 down
