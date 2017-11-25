@@ -9,14 +9,14 @@ import sys
 import requests
 from os import getenv
 
-# Check to see if there's already a Soracom or GSM connection
+# Check to see if there's already a Soracom or GSM connection, exit if there is
 for conn in NetworkManager.Settings.ListConnections():
     settings = conn.GetSettings()['connection']
     if settings['id'] == 'soracom':
-    	print("Soracom connection already exists, exiting")
+    	print("Soracom connection already exists, starting main Application")
     	sys.exit()
     if settings['type'] == 'gsm':
-    	print("Soracom connection already exists, exiting")
+    	print("Soracom connection already exists, starting main Application")
     	sys.exit()    
 
 # Add Soracom connection

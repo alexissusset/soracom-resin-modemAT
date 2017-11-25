@@ -2,9 +2,19 @@
 # Setting DBUS addresss so that we can talk to Modem Manager
 DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 
+# Setup logging function
+function log {
+	if [ -n "${CONSOLE_LOGGING}" ] && [ "${CONSOLE_LOGGING}" -eq "1" ]; then
+		echo "[$(date --rfc-3339=seconds)]: $*" >>/data/soracom.log;
+		echo "$*";
+	else
+    	echo "[$(date --rfc-3339=seconds)]: $*" >>/data/soracom.log;
+    fi
+}
+
 # Add Soracom Network Manager connection if $ADD_SORACOM is defined
 if [[ -n "${ADD_SORACOM}" ]]; then
-	python auto_add_connection.py
+	log(`python auto_add_connection.py`)
 fi
 
 # Start Dropbear SSHD
@@ -12,7 +22,7 @@ if [[ -n "${SSH_PASSWD}" ]]; then
 	#Set the root password
 	echo "root:$SSH_PASSWD" | chpasswd
 	#Start dropbear
-	systemctl start dropbear.service
+	log(`systemctl start dropbear.service`)
 fi
 
 # Check if we have a modem attached to device
@@ -46,7 +56,7 @@ if [[ -n ${CELLULAR_ONLY} ]]; then
 		fi
 	fi
 	if [[ -n "${CONNECTED}" ]]; then
-		echo "Device successfully connected over Cellular"
+		log("Device successfully connected over Cellular")
 	else
 		echo "Re-enabling Ethernet and WiFi as device didn't have internet without it"
 		ls /sys/class/net | grep -q eth0
@@ -58,8 +68,17 @@ if [[ -n ${CELLULAR_ONLY} ]]; then
 			ifconfig wlan0 up
 		fi
 	fi
+else
+	ls /sys/class/net | grep -q eth0
+	if [[ $? -eq 0 ]]; then
+		ifconfig eth0 up
+	fi
+	ls /sys/class/net | grep -q wlan0
+	if [[ $? -eq 0 ]]; then
+		ifconfig wlan0 up
+	fi
 fi
-echo "App Started"
+log("App Started")
 
 # Run connection check script every 15mins
 # wait indefinitely
@@ -68,9 +87,9 @@ do
 	MODEM_NUMBER=`mmcli -L | grep Modem | sed -e 's/\//\ /g' | awk '{print $5}'`
 	# Log signal quality
 	if [[ -n "${MODEM_NUMBER}" ]]; then
-		echo "`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`%"
-		echo `mmcli -m ${MODEM_NUMBER} --command="AT+CSQ"`
+		log("`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`%")
+		log(`mmcli -m ${MODEM_NUMBER} --command="AT+CSQ"`)
 	fi
 	sleep 300;
-	/usr/src/app/reconnect.sh
+	log(`/usr/src/app/reconnect.sh`)
 done
