@@ -10,7 +10,7 @@ ENV INITSYSTEM on
 # Copy all other scripts and files
 RUN mkdir -p /usr/src/app
 COPY src/entry.sh /usr/bin/entry.sh 
-#COPY udev-rules/* /lib/udev/rules.d/
+COPY udev-rules/* /lib/udev/rules.d/
 COPY motd /etc/motd
 COPY src/reconnect.sh /usr/src/app
 COPY src/start.sh /usr/src/app
@@ -48,6 +48,7 @@ RUN apt-get update && apt-get install -yq  \
 # Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
 RUN systemctl disable ModemManager.service
 RUN systemctl mask ModemManager.service
+RUN systemctl disable dropbear.service
 
 # Start our application
 CMD ["bash", "/usr/src/app/start.sh"]

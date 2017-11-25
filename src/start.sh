@@ -6,8 +6,8 @@ DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 if [[ -n "${SSH_PASSWD}" ]]; then
 	#Set the root password
 	echo "root:$SSH_PASSWD" | chpasswd
-	#Spawn dropbear
-	dropbear -E -F &
+	#Start dropbear
+	systemctl start dropbear.service
 fi
 
 # Check if we have a modem attached to device
