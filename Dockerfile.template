@@ -6,11 +6,13 @@ MAINTAINER Alexis Susset <alexis@soraocom.io>
 #switch on systemd init system in container
 ENV INITSYSTEM on
 
+# Example udev-rules
+# COPY udev-rules/* /lib/udev/rules.d/
+
 # Override the default entry.sh and add udev rules for Huawei modems
 # Copy all other scripts and files
 RUN mkdir -p /usr/src/app
 COPY src/entry.sh /usr/bin/entry.sh 
-COPY udev-rules/* /lib/udev/rules.d/
 COPY motd /etc/motd
 COPY src/reconnect.sh /usr/src/app
 COPY src/start.sh /usr/src/app
@@ -21,6 +23,7 @@ RUN chmod +x /usr/src/app/start.sh
 
 # Copy Python Application
 COPY python_src/main.py /usr/src/app
+COPY python_src/auto_add_connection.py /usr/src/app
 COPY python_src/list_connections.py /usr/src/app
 COPY python_src/add_gsm_connection.py /usr/src/app
 COPY python_src/activate_connection.py /usr/src/app
@@ -40,14 +43,14 @@ WORKDIR /usr/src/app
 #  pkg-config libdbus-1-dev libdbus-glib-1-dev: required package and libraries for python-networkmanager
 
 RUN apt-get update && apt-get install -yq  \
-	curl dropbear smstools wireless-tools net-tools usbutils \
+	curl dropbear smstools wireless-tools net-tools usbutils modemmanager \
 	vim pkg-config libdbus-1-dev libdbus-glib-1-dev && \
 	apt-get autoremove && apt-get clean && rm -rf /tmp/* && \
 	pip install -r requirements.txt 
 
 # Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
-#RUN systemctl disable ModemManager.service
-#RUN systemctl mask ModemManager.service
+RUN systemctl disable ModemManager.service
+RUN systemctl mask ModemManager.service
 RUN systemctl disable dropbear.service
 
 # Start our application
