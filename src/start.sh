@@ -4,7 +4,7 @@ DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 
 # Setup logging function
 function log {
-	if [ -n "${CONSOLE_LOGGING}" ] && [ "${CONSOLE_LOGGING}" -eq "1" ]; then
+	if [[ -n "${CONSOLE_LOGGING+x}" ]]; then
 		echo "[$(date --rfc-3339=seconds)]: $*" >>/data/soracom.log;
 		echo "$*";
 	else
@@ -12,13 +12,18 @@ function log {
     fi
 }
 
+# Check if CONSOLE_LOGGING is set, otherwise indicate that logging is going to /data/soracom.log
+if [[ -z ${CONSOLE_LOGGING+x} ]]; then
+	echo "CONSOLE_LOGGING hasn't been set, logging to /data/soracom.log"
+fi
+
 # Add Soracom Network Manager connection if $ADD_SORACOM is defined
-if [[ -n "${ADD_SORACOM}" ]]; then
+if [[ -n "${ADD_SORACOM+x}" ]]; then
 	log `python auto_add_connection.py`
 fi
 
 # Start Dropbear SSHD
-if [[ -n "${SSH_PASSWD}" ]]; then
+if [[ -n "${SSH_PASSWD+x}" ]]; then
 	#Set the root password
 	echo "root:$SSH_PASSWD" | chpasswd
 	#Start dropbear
@@ -34,7 +39,8 @@ if [ $? -eq 0 ]; then
 fi
 
 # Check if we should disable non-cellular connectivity
-if [[ -n "${CELLULAR_ONLY}" ]]; then
+if [[ -n "${CELLULAR_ONLY+x}" ]]; then
+	log "Starting device in Cellular mode"
 	ls /sys/class/net | grep -q wlan0
 	if [[ $? -eq 0 ]]; then
 		ifconfig wlan0 down
@@ -43,7 +49,7 @@ if [[ -n "${CELLULAR_ONLY}" ]]; then
 	if [[ $? -eq 0 ]]; then
 		ifconfig eth0 down
 	fi
-	if [[ -n "${MODEM_NUMBER}" ]]; then
+	if [[ -n "${MODEM_NUMBER+x}" ]]; then
 		# Check to see if Modem successfully connected
 		mmcli -m ${MODEM_NUMBER} | grep -q "state: 'connected'"
 		if [ $? -eq 0 ]; then
@@ -55,10 +61,10 @@ if [[ -n "${CELLULAR_ONLY}" ]]; then
 			CONNECTED=1
 		fi
 	fi
-	if [[ -n "${CONNECTED}" ]]; then
+	if [[ -n "${CONNECTED+x}" ]]; then
 		log "Device successfully connected over Cellular"
 	else
-		echo "Re-enabling Ethernet and WiFi as device didn't have internet without it"
+		log "Re-enabling Ethernet and WiFi as device didn't have internet without it"
 		ls /sys/class/net | grep -q eth0
 		if [[ $? -eq 0 ]]; then
 			ifconfig eth0 up
@@ -86,7 +92,7 @@ while :
 do
 	MODEM_NUMBER=`mmcli -L | grep Modem | sed -e 's/\//\ /g' | awk '{print $5}'`
 	# Log signal quality
-	if [[ -n "${MODEM_NUMBER}" ]]; then
+	if [[ -n "${MODEM_NUMBER+x}" ]]; then
 		log "`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`%"
 		log `mmcli -m ${MODEM_NUMBER} --command="AT+CSQ"`
 	fi

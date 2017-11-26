@@ -7,8 +7,7 @@ Once this is done, connect the Dongle, boot the device and it should come online
 Our sample Raspberry Pi application uses environment variables to enable a couple of useful features which optimise bandwidth usage and leverage Soracom Harvest and Gate services:
 * SSH_PASSWD: when set, this will start sshd and set root password to SSH_PASSWD
 * CELLULAR_ONLY: This option disables WiFi
-* CONSOLE_LOGGING: Set to 1 in order to get application logs in Resin.io device console, otherwise logs are written to /data/soracom.log
-* DEBUG: Set to 1 to have debug logging, use in combination with CONSOLE_LOGGING to see logs in resin.io device console
+* CONSOLE_LOGGING: Set to 1 in order to get application logs in Resin.io device console, logs are always written to /data/soracom.log
 
 # Running AT commands
 This version of resin.io image also adds support to run AT commands on your Cellular modem.
@@ -47,8 +46,6 @@ The network RSSI (strength) can be read as follow:
 -99 dbm to -90 dBm: Weak signal 
 -89 dbm to -70 dBm: Medium to high signal
 -69 dBm or greater: Strong signal
-
-
 
 
 This has been tested on Huawei MS2131 Dongle but should also work with any modem that exposes a Serial interface to Modem Manager and Network Manager

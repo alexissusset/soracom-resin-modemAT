@@ -1,3 +1,2 @@
-Flask>=0.10.1
 requests>=2.18.4
 python-networkmanager>=2.0.1
