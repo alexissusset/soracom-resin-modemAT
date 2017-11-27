@@ -76,6 +76,15 @@ if [[ -n "${CELLULAR_ONLY+x}" ]]; then
 			ifconfig wlan0 up
 		fi
 	fi
+else
+	ls /sys/class/net | grep -q eth0
+	if [[ $? -eq 0 ]]; then
+		ifconfig eth0 up
+	fi
+	ls /sys/class/net | grep -q wlan0
+	if [[ $? -eq 0 ]]; then
+		ifconfig wlan0 up
+	fi
 fi
 log "App Started"
 
