@@ -26,8 +26,8 @@ fi
 if [[ -n "${SSH_PASSWD+x}" ]]; then
 	#Set the root password
 	echo "root:$SSH_PASSWD" | chpasswd
-	#Start dropbear
-	log `systemctl start dropbear.service`
+	#Start opensshd
+	log `systemctl start sshd.service`
 fi
 
 # Check if we have a modem attached to device

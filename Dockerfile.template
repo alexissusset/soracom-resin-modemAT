@@ -33,7 +33,7 @@ WORKDIR /usr/src/app
 
 # Install the following packages:
 #  curl: used to test if the device has a network connection
-#  dropbear: ssh server to access the device remotely (useful for troubleshooting, alternatively you can use resin.io CLI or console)
+#  openssh-server: ssh server to access the device remotely (useful for troubleshooting, alternatively you can use resin.io CLI or console)
 #  smstools: tool to handle SMS
 #  wireless-tools: tool to check WiFi based connectivity
 #  net-tools: tool to get older unix commands such as ifconfig
@@ -43,7 +43,7 @@ WORKDIR /usr/src/app
 #  build-essential, pkg-config libdbus-1-dev libdbus-glib-1-dev: required package and libraries for python-networkmanager
 
 RUN apt-get update && apt-get install -yq  \
-	curl dropbear smstools wireless-tools net-tools usbutils modemmanager \
+	curl openssh-server smstools wireless-tools net-tools usbutils modemmanager \
 	vim build-essential pkg-config libdbus-1-dev libdbus-glib-1-dev && \
 	apt-get autoremove && apt-get clean && rm -rf /tmp/* && \
 	pip install -r requirements.txt 
@@ -51,7 +51,7 @@ RUN apt-get update && apt-get install -yq  \
 # Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
 RUN systemctl disable ModemManager.service
 RUN systemctl mask ModemManager.service
-RUN systemctl disable dropbear.service
+RUN systemctl disable sshd.service
 
 # Start our application
 CMD ["bash", "/usr/src/app/start.sh"]
