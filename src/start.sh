@@ -26,6 +26,8 @@ fi
 if [[ -n "${SSH_PASSWD+x}" ]]; then
 	#Set the root password
 	echo "root:$SSH_PASSWD" | chpasswd
+	#Update opensshd config
+	sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 	#Start opensshd
 	log `systemctl start sshd.service`
 fi
