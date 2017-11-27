@@ -44,7 +44,7 @@ WORKDIR /usr/src/app
 
 RUN apt-get update && apt-get install -yq  \
 	curl dropbear smstools wireless-tools net-tools usbutils modemmanager \
-	vim build-essential, pkg-config libdbus-1-dev libdbus-glib-1-dev && \
+	vim build-essential pkg-config libdbus-1-dev libdbus-glib-1-dev && \
 	apt-get autoremove && apt-get clean && rm -rf /tmp/* && \
 	pip install -r requirements.txt 
 

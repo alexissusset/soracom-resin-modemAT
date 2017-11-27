@@ -81,11 +81,14 @@ log "App Started"
 # wait indefinitely
 while :
 do
-	MODEM_NUMBER=`mmcli -L | grep Modem | sed -e 's/\//\ /g' | awk '{print $5}'`
-	# Log signal quality
-	if [[ -n "${MODEM_NUMBER+x}" ]]; then
-		log "`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`%"
-		log `mmcli -m ${MODEM_NUMBER} --command="AT+CSQ"`
+	mmcli -L | grep -q Modem
+	if [ $? -eq 0 ]; then
+		MODEM_NUMBER=`mmcli -L | grep Modem | head -1 | sed -e 's/\//\ /g' | awk '{print $5}'`
+		# Log signal quality
+		if [[ -n "${MODEM_NUMBER+x}" ]]; then
+			log "`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`%"
+			log `mmcli -m ${MODEM_NUMBER} --command="AT+CSQ"`
+		fi
 	fi
 	sleep 300;
 	log `/usr/src/app/reconnect.sh`
