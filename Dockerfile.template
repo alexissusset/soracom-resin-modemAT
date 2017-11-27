@@ -40,11 +40,11 @@ WORKDIR /usr/src/app
 #  usbutils: tools to check attached USB devices
 #  modemmanager: Cellular Modem Manager CLI, used to manage connected modems
 #  vim: text editor, useful when developing
-#  pkg-config libdbus-1-dev libdbus-glib-1-dev: required package and libraries for python-networkmanager
+#  build-essential, pkg-config libdbus-1-dev libdbus-glib-1-dev: required package and libraries for python-networkmanager
 
 RUN apt-get update && apt-get install -yq  \
 	curl dropbear smstools wireless-tools net-tools usbutils modemmanager \
-	vim pkg-config libdbus-1-dev libdbus-glib-1-dev && \
+	vim build-essential, pkg-config libdbus-1-dev libdbus-glib-1-dev && \
 	apt-get autoremove && apt-get clean && rm -rf /tmp/* && \
 	pip install -r requirements.txt 
 
