@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install -yq  \
 
 # Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
 RUN systemctl disable ModemManager
-RUN systemctl mask ModemManager.service
+RUN systemctl mask ModemManager
 RUN systemctl disable ssh
 
 # Start our application
