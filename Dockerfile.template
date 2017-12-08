@@ -3,13 +3,13 @@ FROM resin/%%RESIN_MACHINE_NAME%%-python:slim
 
 MAINTAINER Alexis Susset <alexis@soraocom.io>
 
-#switch on systemd init system in container
+#switch off systemd init system in container
 ENV INITSYSTEM off
 
-# Example udev-rules
-COPY udev-rules/* /lib/udev/rules.d/
+# Example Huawei modems udev-rules (Only needed if systemd is used)
+#COPY udev-rules/* /lib/udev/rules.d/
 
-# Override the default entry.sh and add udev rules for Huawei modems
+# Override the default entry.sh
 # Copy all other scripts and files
 RUN mkdir -p /usr/src/app
 COPY src/entry.sh /usr/bin/entry.sh 
