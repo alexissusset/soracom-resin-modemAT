@@ -7,7 +7,7 @@ MAINTAINER Alexis Susset <alexis@soraocom.io>
 ENV INITSYSTEM on
 
 # Example udev-rules
-# COPY udev-rules/* /lib/udev/rules.d/
+COPY udev-rules/* /lib/udev/rules.d/
 
 # Override the default entry.sh and add udev rules for Huawei modems
 # Copy all other scripts and files
