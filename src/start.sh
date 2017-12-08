@@ -29,7 +29,7 @@ if [[ -n "${SSH_PASSWD+x}" ]]; then
 	#Update opensshd config
 	sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 	#Start opensshd
-	log `systemctl start ssh`
+	log `service ssh start`
 fi
 
 # Check if we have a modem attached to device
