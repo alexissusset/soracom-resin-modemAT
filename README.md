@@ -20,7 +20,10 @@ Not all Cellular modems let you run AT commands as some of them expose a NATed E
   
 1. In your resin.io Application, please make sure to set the following Fleet Configuration variables to ensure that your Cellular modem has enough power:  
     1. RESIN_HOST_CONFIG_max_usb_current = 1  
-    1. RESIN_HOST_CONGIG_safe_mode_gpio = 4
+    1. RESIN_HOST_CONGIG_safe_mode_gpio = 4  
+  
+1.You can also add the following Fleet Configuration variable to save bandwidth when pushing updates to your container:
+    1. RESIN_SUPERVISOR_DELTA = 1 
   
 # Resin.io environment variables  
 Our sample application uses environment variables to enable a couple of useful features which optimise bandwidth usage (Switch console logging on and off) and ensure Cellular based connectivity:
