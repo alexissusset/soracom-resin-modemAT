@@ -18,6 +18,10 @@ Not all Cellular modems let you run AT commands as some of them expose a NATed E
     1. Start the device on WiFi or Ethernet and let the soracom.py script add the GSM connection in Network Manager for you
     1. Place the soracom GSM configuration file on your device's SD card in /system-connections/ using the following command: `cp soracom-resin/soracom /Volume/resin-boot/system-connections/`  
   
+1. In your resin.io Application, please make sure to set the following Fleet Configuration variables to ensure that your Cellular modem ahs enough power:  
+    1. RESIN_HOST_CONFIG_max_usb_current = 1  
+    1. RESIN_HOST_CONGIG_safe_mode_gpio = 4
+  
 # Resin.io environment variables  
 Our sample application uses environment variables to enable a couple of useful features which optimise bandwidth usage (Switch console logging on and off) and ensure Cellular based connectivity:
 * CELLULAR_ONLY: This option disables WiFi and Ethernet to ensure that the device solely uses Cellular connection  
