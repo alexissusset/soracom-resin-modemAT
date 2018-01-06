@@ -1,6 +1,6 @@
 # Soracom's sample resin.io Application with Cellular modem AT commands support  
 This sample Application demonstrates how to use Resin.io based App+Device to leverage Cellular modems which AT commands support  
-This has been tested on Raspberry Pi 3, Raspberry Pi Zero and nVidia JETSON TX2. It has been designed to work on all current and future devices supported by resin.io  
+This has been tested on Raspberry Pi 3, Raspberry Pi Zero, Raspberry Pi B+ and Nvidia JETSON TX2. It has been designed to work on all current and future devices supported by resin.io  
   
 # Notes  
 This Application implements two methods to talking to Modem Manager and Network Manager on ResinOS.  
@@ -16,7 +16,7 @@ Not all Cellular modems let you run AT commands as some of them expose a NATed E
 # Setup  
 1. In order to use a 3G Dongle with ResinOS 2.x and Soracom, you will have two choices after creating your Resin.io based App+Device:  
     1. Start the device on WiFi or Ethernet and let the soracom.py script add the GSM connection in Network Manager for you
-    1. Place the soracom GSM configuration file on your device's SD card in /system-connections/ using the following command: `cp soracom-resin/soracom /Volume/resin-boot/system-connections/`  
+    1. Place the soracom GSM configuration file on your device's SD card in /system-connections/ using the following command: `cp soracom /Volume/resin-boot/system-connections/`  
   
 1. In your resin.io Application, please make sure to set the following Fleet Configuration variables to ensure that your Cellular modem has enough power:  
     1. RESIN_HOST_CONFIG_max_usb_current = 1  
