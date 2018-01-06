@@ -1,57 +1,32 @@
-# Base resin image containing everything needed to run NodeJS
 FROM resin/%%RESIN_MACHINE_NAME%%-python:slim
 
 MAINTAINER Alexis Susset <alexis@soraocom.io>
 
-#switch off systemd init system in container
-ENV INITSYSTEM off
-
-# Example Huawei modems udev-rules (Only needed if systemd is used)
-#COPY udev-rules/* /lib/udev/rules.d/
-
-# Override the default entry.sh
-# Copy all other scripts and files
-RUN mkdir -p /usr/src/app
-COPY src/entry.sh /usr/bin/entry.sh 
-COPY motd /etc/motd
-COPY src/reconnect.sh /usr/src/app
-COPY src/start.sh /usr/src/app
-COPY src/bashrc /root/.bashrc
-RUN chmod +x /usr/bin/entry.sh
-RUN chmod +x /usr/src/app/reconnect.sh
-RUN chmod +x /usr/src/app/start.sh
-
-# Copy Python Application
-COPY python_src/main.py /usr/src/app
-COPY python_src/auto_add_connection.py /usr/src/app
-COPY python_src/list_connections.py /usr/src/app
-COPY python_src/add_gsm_connection.py /usr/src/app
-COPY python_src/activate_connection.py /usr/src/app
-COPY python_src/requirements.txt /usr/src/app
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+    build-essential pkg-config libdbus-1-dev libdbus-glib-1-dev curl \
+    net-tools modemmanager logrotate && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-# Install the following packages:
-#  curl: used to test if the device has a network connection
-#  openssh-server: ssh server to access the device remotely (useful for troubleshooting, alternatively you can use resin.io CLI or console)
-#  smstools: tool to handle SMS
-#  wireless-tools: tool to check WiFi based connectivity
-#  net-tools: tool to get older unix commands such as ifconfig
-#  usbutils: tools to check attached USB devices
-#  modemmanager: Cellular Modem Manager CLI, used to manage connected modems
-#  vim: text editor, useful when developing
-#  build-essential, pkg-config libdbus-1-dev libdbus-glib-1-dev: required package and libraries for python-networkmanager
+COPY src/entry.sh /usr/bin/entry.sh
+COPY src/start.sh /usr/src/app
+COPY src/reconnect.sh /usr/src/app
+COPY src/bashrc /root/.bashrc
+COPY src/motd /etc/motd
+COPY src/soracom.py /usr/src/app
+COPY src/logrotate.conf /usr/src/app
 
-RUN apt-get update && apt-get install -yq  \
-	curl openssh-server smstools wireless-tools net-tools usbutils modemmanager \
-	vim build-essential pkg-config libdbus-1-dev libdbus-glib-1-dev && \
-	apt-get autoremove && apt-get clean && rm -rf /tmp/* && \
-	pip install -r requirements.txt 
+RUN chmod 777 /usr/src/app/start.sh
+RUN chmod 777 /usr/src/app/reconnect.sh
+RUN chmod 777 /usr/bin/entry.sh
+RUN pip install wheel
+RUN pip install requests
+RUN pip install python-networkmanager
 
-# Disable Modem Manager systemd service in order to avoid conflict with ResinOS Modem Manager
-RUN systemctl disable ModemManager.service
-RUN systemctl mask ModemManager.service
-RUN systemctl disable ssh
+RUN systemctl disable ModemManager
+RUN systemctl mask ModemManager
 
-# Start our application
+ENV INITSYSTEM off
+
 CMD ["bash", "/usr/src/app/start.sh"]
