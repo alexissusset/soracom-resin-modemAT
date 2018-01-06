@@ -10,7 +10,7 @@ The second one is the python-networkmanager python package which lets you write 
 It is also important to note that we're using resin/python Docker container in this project, due to potential conflicts with udevd and Modem Manager, we keep udevd off in the container (through supplied `entry.sh`) which ensures highest level of ResinOS compatibility with Cellular modems  
 Be sure to use the latest version of ResinOS in order to have full support of your preferred Hardware  
   
-Not all Cellular modems let you run AT commands as some of them expose a NATed Ethernet interface rather than a cellular modem interface that Modem Manager can talk to, we've tested the following Application with Huawei MS2131, MS2372, ME909, MU709 and Quectel EC21  
+Not all Cellular modems let you run AT commands as some of them expose a NATed Ethernet interface rather than a serial interface that Modem Manager can interface with, we've tested the following Application with Huawei MS2131, MS2372, ME909, MU709 and Quectel EC21  
 
 
 # Setup  
@@ -24,7 +24,7 @@ Our sample application uses environment variables to enable a couple of useful f
 * CONSOLE_LOGGING: Set to 1 in order to get application logs in Resin.io device console, logs are always written to /data/soracom.log, keep if off in order to save on Cellular based bandwidth  
 
 # Running AT commands
-Through ModemManager package, you can run AT commands on your Cellular modem. We've tested this project 
+Through ModemManager package, you can run AT commands on your Cellular modem.
 
 To do so, we've set the following variable in our bashrc configuration which enables mmcli and python-networkmanager to communicate with ResinOS DBUS:  
 
