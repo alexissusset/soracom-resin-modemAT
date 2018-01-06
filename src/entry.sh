@@ -2,18 +2,6 @@
 
 set -m
 
-function start_udev()
-{
-	which udevd
-	if [ $? == '0' ]; then
-		udevd --daemon &> /dev/null
-	else
-		/lib/systemd/systemd-udevd --daemon &> /dev/null
-	fi
-    # Comment out udevadm replugging the devices so modems work.
-	# udevadm trigger &> /dev/null
-}
-
 function remove_buildtime_env_var()
 {
 	unset QEMU_CPU
@@ -90,10 +78,6 @@ function init_non_systemd()
 	# echo error message, when executable file doesn't exist.
 	if [ $? == '0' ]; then
 		shift
-		if [ ! -z "$RESIN" ] && [ ! -z "$RESIN_DEVICE_UUID" ]; then
-			# run this on resin device only
-			start_udev
-		fi
 		tini -sg -- "$CMD" "$@" &
 		pid=$!
 		wait "$pid"
