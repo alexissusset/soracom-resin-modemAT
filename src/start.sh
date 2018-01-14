@@ -20,7 +20,7 @@ else
 fi
 
 # Start Linux watchdog
-#log "`/etc/init.d/watchdog start`"
+log "`service watchdog start`"
 
 # Add Soracom Network Manager connection
 log "`python soracom.py`"
