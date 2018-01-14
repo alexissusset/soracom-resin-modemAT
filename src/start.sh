@@ -20,10 +20,10 @@ else
 fi
 
 # Start Linux watchdog
-log `/etc/init.d/watchdog start`
+log "`/etc/init.d/watchdog start`"
 
 # Add Soracom Network Manager connection
-log `python soracom.py`
+log "`python soracom.py`"
 
 # Check if we should disable non-cellular connectivity
 if [[ -n "${CELLULAR_ONLY+x}" ]]; then
@@ -60,13 +60,13 @@ do
 			# Log signal quality
 			if [[ -n "${MODEM_NUMBER+x}" ]]; then
 				log "`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`%"
-				log `mmcli -m ${MODEM_NUMBER} --command="AT+CSQ"`
+				log "`mmcli -m ${MODEM_NUMBER} --command='AT+CSQ'`"
 			fi
 		fi
 	fi
 	sleep 500;
 	# Rotate log files
-	log `logrotate /usr/src/app/logrotate.conf`
+	log "`logrotate /usr/src/app/logrotate.conf`"
 	# Check if internet connectivity is working, reboot if it isn't
-	log `/usr/src/app/reconnect.sh`
+	log "`/usr/src/app/reconnect.sh`"
 done
