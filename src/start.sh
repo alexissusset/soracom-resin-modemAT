@@ -47,6 +47,60 @@ else
 	fi
 fi
 
+# Operators scanning function, please note that GSM connection is disabled while scanning
+# If there are no other connection, logs will not appear in Resin console but are available in /data/soracom.log
+if [[ -n "${SCAN_OPERATORS+x}" ]]; then
+	mmcli -L | grep -q Modem
+	if [ $? -eq 0 ]; then
+		MODEM_NUMBER=`mmcli -L | grep Modem | head -1 | sed -e 's/\//\ /g' | awk '{print $5}'`
+		log "`python nmcli.py deactivate soracom`"
+		log "`mmcli -m ${MODEM_NUMBER} --3gpp-scan --timeout=220`"
+		log "`python nmcli.py activate soracom`"
+	else
+		log "No modem available, cannot scan avaialbe Operators"
+	fi
+fi
+
+# Operator selection function
+# It will mommentarily switch off soracom connection and make sure that operator is avaiable before trying to connect to it
+# The Operator ID setting isn't persistent in the modem and will need to be re-added after a reboot/reset
+if [[ -n "${OPERATOR_ID+x}" && ! -f /data/operator_setting_failed ]]; then
+	mmcli -L | grep -q Modem
+	if [ $? -eq 0 ]; then
+		MODEM_NUMBER=`mmcli -L | grep Modem | head -1 | sed -e 's/\//\ /g' | awk '{print $5}'`
+		# Check to see if we're already connected to preferred operator
+		mmcli -m ${MODEM_NUMBER} | grep -q "operator id" | grep -q ${OPERATOR_ID}
+		if [ $? -eq 0 ]; then
+			log "Already connected to Operator ID ${OPERATOR_ID}, starting application"
+		else
+			log "`python nmcli.py deactivate soracom`"
+			mmcli -m ${MODEM_NUMBER} --3gpp-scan --timeout=220 | grep -q ${OPERATOR_ID}
+			if [ $? -eq 0 ]; then
+				log "Setting preferred Operator ID to ${OPERATOR_ID}"
+				log "`mmcli -m ${MODEM_NUMBER} --3gpp-register-in-operator=${OPERATOR_ID}`"
+				if [ $? -eq 0 ]; then
+					log "`Successfully set Operator ID to ${OPERATOR_ID}`"
+				else
+					log "`Couldn't set Operator ID to ${OPERATOR_ID}, rebooting node to use default operator`"
+					touch /data/operator_setting_failed
+					curl -X POST --header "Content-Type:application/json" "$RESIN_SUPERVISOR_ADDRESS/v1/reboot?apikey=$RESIN_SUPERVISOR_API_KEY"
+				fi
+			else
+				log "not setting preferred Operator ID as ${OPERATOR_ID} isn't avialble"
+			fi
+			log "`python nmcli.py activate soracom`"
+		fi
+	else
+		log "No modem available, cannot set Operator ID"
+	fi
+fi
+
+# Cleanup of operator_setting_failed file so that OPERATOR_ID setting will be tested/added in following reboot
+if [[ -f /data/operator_setting_failed ]]; then
+	log "Erasing /data/operator_setting_failed"
+	rm /data/operator_setting_failed
+fi
+
 # Run connection check script every 500 seconds
 # If Cellular Mode wasn't working, the device will reboot every 15mins until it works
 while :
