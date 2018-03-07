@@ -31,6 +31,7 @@ COPY src/reconnect.sh /usr/src/app
 COPY src/bashrc /root/.bashrc
 COPY src/motd /etc/motd
 COPY src/soracom.py /usr/src/app
+COPY src/nmcli.py /usr/src/app
 COPY src/logrotate.conf /usr/src/app
 
 RUN chmod 777 /usr/src/app/start.sh
