@@ -29,6 +29,8 @@ Not all Cellular modems let you run AT commands as some of them expose a NATed E
 Our sample application uses environment variables to enable a couple of useful features which optimise bandwidth usage (Switch console logging on and off) and ensure Cellular based connectivity:
 * CELLULAR_ONLY: This option disables WiFi and Ethernet to ensure that the device solely uses Cellular connection  
 * CONSOLE_LOGGING: Set to 1 in order to get application logs in Resin.io device console, logs are always written to /data/soracom.log, keep if off in order to save on Cellular based bandwidth  
+* SCAN_OPERATORS: Set to 1 in order to scan available operators  
+* OPERATOR_ID: Set to your preferred Operator ID and your modem will check if it's available, try to switch to it, reboot the host to connect back to an available operator if there's an error  
 
 # Running AT commands
 Through ModemManager package, you can run AT commands on your Cellular modem.
@@ -63,7 +65,8 @@ The network RSSI (strength) can be read as follow:
 
 # Credits  
 Feel free to visit our [Soracom](https://www.soracom.io) website if you'd like to get your Sim card and Dongle as well as learn more about various IoT topics  
-Special thanks to the [OpenDoor](https://www.opendoor.com) team for bringing up the idea!  
+Dennis Kaarsemaker and his contributors for making the [python-networkmanager](https://github.com/seveas/python-networkmanager) library and code examples  
 And thank you to the folks at [Resin.io](https://www.resin.io) for making their awesome platform  
+
   
 ![Soracom Developers](https://raw.githubusercontent.com/soracom/resin-rpi-demo/master/logo_developers_head.png)
