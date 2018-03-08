@@ -85,6 +85,7 @@ if [[ -n "${OPERATOR_ID+x}" && ! -f /data/operator_setting_failed ]]; then
 				else
 					log "Couldn't set Operator ID to ${OPERATOR_ID}, rebooting node to use default operator"
 					touch /data/operator_setting_failed
+					log "`python nmcli.py activate soracom`"
 					curl -X POST --header "Content-Type:application/json" "$RESIN_SUPERVISOR_ADDRESS/v1/reboot?apikey=$RESIN_SUPERVISOR_API_KEY"
 				fi
 			else
