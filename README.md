@@ -1,5 +1,6 @@
 # Soracom's sample resin.io Application with Cellular modem AT commands support  
 This sample Application demonstrates how to use Resin.io based App+Device to leverage Cellular modems which AT commands support  
+This Application also provides ability to scan available operators and leverage modem manager to select a specific operator  
 This has been tested on Raspberry Pi 3, Raspberry Pi Zero, Raspberry Pi B+ and Nvidia JETSON TX2. It has been designed to work on all current and future devices supported by resin.io  
   
 # Notes  
