@@ -81,9 +81,9 @@ if [[ -n "${OPERATOR_ID+x}" && ! -f /data/operator_setting_failed ]]; then
 				log "Setting preferred Operator ID to ${OPERATOR_ID}"
 				log "`mmcli -m ${MODEM_NUMBER} --3gpp-register-in-operator=${OPERATOR_ID}`"
 				if [ $? -eq 0 ]; then
-					log "`Successfully set Operator ID to ${OPERATOR_ID}`"
+					log "Successfully set Operator ID to ${OPERATOR_ID}"
 				else
-					log "`Couldn't set Operator ID to ${OPERATOR_ID}, rebooting node to use default operator`"
+					log "Couldn't set Operator ID to ${OPERATOR_ID}, rebooting node to use default operator"
 					touch /data/operator_setting_failed
 					curl -X POST --header "Content-Type:application/json" "$RESIN_SUPERVISOR_ADDRESS/v1/reboot?apikey=$RESIN_SUPERVISOR_API_KEY"
 				fi
