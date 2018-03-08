@@ -89,7 +89,7 @@ if [[ -n "${OPERATOR_ID+x}" && ! -f /data/operator_setting_failed ]]; then
 					curl -X POST --header "Content-Type:application/json" "$RESIN_SUPERVISOR_ADDRESS/v1/reboot?apikey=$RESIN_SUPERVISOR_API_KEY"
 				fi
 			else
-				log "not setting preferred Operator ID as ${OPERATOR_ID} isn't avialble"
+				log "not setting preferred Operator ID as ${OPERATOR_ID} isn't available"
 			fi
 			log "`python nmcli.py activate soracom`"
 		fi
