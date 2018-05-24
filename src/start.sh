@@ -54,7 +54,7 @@ if [[ -n "${SCAN_OPERATORS+x}" ]]; then
 	if [ $? -eq 0 ]; then
 		MODEM_NUMBER=`mmcli -L | grep Modem | head -1 | sed -e 's/\//\ /g' | awk '{print $5}'`
 		log "`python nmcli.py deactivate soracom`"
-		sleep 5
+		sleep 25
 		log "`mmcli -m ${MODEM_NUMBER} --3gpp-scan --timeout=220`"
 		log "`python nmcli.py activate soracom`"
 	else
@@ -75,7 +75,7 @@ if [[ -n "${OPERATOR_ID+x}" && ! -f /data/operator_setting_failed ]]; then
 			log "Already connected to Operator ID ${OPERATOR_ID}, starting application"
 		else
 			log "`python nmcli.py deactivate soracom`"
-			sleep 5
+			sleep 25
 			mmcli -m ${MODEM_NUMBER} --3gpp-scan --timeout=220 | grep -q ${OPERATOR_ID}
 			if [ $? -eq 0 ]; then
 				log "Setting preferred Operator ID to ${OPERATOR_ID}"
