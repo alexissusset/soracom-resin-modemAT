@@ -1,5 +1,5 @@
 # Preparing builder container
-FROM resin/%%RESIN_MACHINE_NAME%%-python as builder
+FROM balenalib/%%RESIN_MACHINE_NAME%%-python as builder
 
 RUN apt-get update && apt-get install -yq \
     git-core build-essential libcurl4-gnutls-dev g++ \
@@ -12,7 +12,7 @@ RUN pip install python-networkmanager
 
 # Base build completed
 # Deploying final App
-FROM resin/%%RESIN_MACHINE_NAME%%-python:slim
+FROM balenalib/%%RESIN_MACHINE_NAME%%-python:slim
 
 MAINTAINER Alexis Susset <alexis@soraocom.io>
 
@@ -25,7 +25,6 @@ WORKDIR /usr/src/app
 # Copy files from builder container
 COPY --from=builder /usr/local/lib/python2.7/site-packages/ /usr/local/lib/python2.7/site-packages/
 
-COPY src/entry.sh /usr/bin/entry.sh
 COPY src/start.sh /usr/src/app
 COPY src/reconnect.sh /usr/src/app
 COPY src/bashrc /root/.bashrc
@@ -37,9 +36,6 @@ COPY src/logrotate.conf /usr/src/app
 RUN chmod 777 /usr/src/app/start.sh
 RUN chmod 777 /usr/src/app/reconnect.sh
 RUN chmod 777 /usr/bin/entry.sh
-
-RUN systemctl disable ModemManager
-RUN systemctl mask ModemManager
 
 ENV INITSYSTEM off
 
