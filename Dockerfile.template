@@ -12,7 +12,7 @@ RUN pip install python-networkmanager
 
 # Base build completed
 # Deploying final App
-FROM balenalib/%%RESIN_MACHINE_NAME%%-python:slim
+FROM balenalib/%%RESIN_MACHINE_NAME%%-python
 
 MAINTAINER Alexis Susset <alexis@soraocom.io>
 
