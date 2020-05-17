@@ -4,11 +4,11 @@ export DBUS_SYSTEM_BUS_ADDRESS="unix:path=/host/run/dbus/system_bus_socket"
 
 # Setup logging function
 function log {
-	if [[ "${CONSOLE_LOGGING}" == "1" ]]; then
+	if [[ "${CONSOLE_LOGGING}" == "0" ]]; then
 		echo "[$(date --rfc-3339=seconds)]: $*" >>/data/soracom.log;
-		echo "$*";
 	else
     	echo "[$(date --rfc-3339=seconds)]: $*" >>/data/soracom.log;
+		echo "$*";
     fi
 }
 
