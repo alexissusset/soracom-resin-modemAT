@@ -13,10 +13,10 @@ function log {
 }
 
 # Check if CONSOLE_LOGGING is set, otherwise indicate that logging is going to /data/soracom.log
-if [[ "${CONSOLE_LOGGING}" == "1" ]]; then
-	echo "CONSOLE_LOGGING is set to 1, logging to console and /data/soracom.log"
+if [[ "${CONSOLE_LOGGING}" == "0" ]]; then
+	echo "CONSOLE_LOGGING isn't set to 0, logging to console and /data/soracom.log"
 else
-	echo "CONSOLE_LOGGING isn't set to 1, logging to /data/soracom.log"
+	echo "CONSOLE_LOGGING set to 0, logging only to /data/soracom.log"
 fi
 
 # Start Linux watchdog
