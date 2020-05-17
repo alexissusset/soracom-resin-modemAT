@@ -118,7 +118,7 @@ do
 			if [[ -n "${MODEM_NUMBER+x}" ]]; then
 				log "`mmcli -m ${MODEM_NUMBER} | grep 'access tech' | sed -e \"s/'//g\" | sed -e \"s/|//g\" | sed -e \":a;s/^\([[:space:]]*\)[[:space:]]//g\"`"
 				log "`mmcli -m ${MODEM_NUMBER} | grep 'operator name' | sed -e \"s/'//g\" | sed -e \"s/|//g\" | sed -e ':a;s/^\([[:space:]]*\)[[:space:]]//g'`"
-				log "`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`%"
+				log "`mmcli -m ${MODEM_NUMBER} | grep quality | sed -e \"s/'//g\" | awk '{print $2 " " $3 " " $4}'`"
 				log "`mmcli -m ${MODEM_NUMBER} --command='AT+CSQ'`"
 			fi
 		fi
