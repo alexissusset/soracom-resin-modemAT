@@ -36,6 +36,7 @@ COPY src/logrotate.conf /usr/src/app
 RUN chmod 777 /usr/src/app/start.sh
 RUN chmod 777 /usr/src/app/reconnect.sh
 RUN chmod 777 /usr/bin/entry.sh
+RUN chmod 644 //usr/src/app/logrotate.conf
 
 ENV INITSYSTEM off
 
