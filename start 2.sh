@@ -36,7 +36,7 @@ if [[ -n "${CELLULAR_ONLY+x}" ]]; then
 	done
 	for interface in eth*
 	do
-		[[ -e "${interface}" ]] || break # handle the case of no ethernet interface
+		[[ -e "${interface}"]] || break # handle the case of no ethernet interface
 		ifconfig "${interface}" down
 	done
 else
