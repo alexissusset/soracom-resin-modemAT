@@ -3,6 +3,9 @@ Script that checks if Soracom network connection is present
 If not, it will add it and reboot the device
 """
 
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
+
 import NetworkManager
 import uuid
 import sys
@@ -40,3 +43,4 @@ NetworkManager.Settings.AddConnection(soracom_connection)
 print("Soracom connection successfully added, rebooting to reset GSM Modem and establish connection")
 url = "{0}/v1/reboot?apikey=".format(getenv('RESIN_SUPERVISOR_ADDRESS')) + "{0}".format(getenv('RESIN_SUPERVISOR_API_KEY'))
 requests.post(url)
+

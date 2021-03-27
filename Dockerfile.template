@@ -1,30 +1,20 @@
-# Preparing builder container
-FROM balenalib/%%RESIN_MACHINE_NAME%%-python as builder
+FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3
+MAINTAINER alexis@soracom.io
 
-RUN apt-get update && apt-get install -yq \
-    git-core build-essential libcurl4-gnutls-dev g++ \
-    pkg-config libdbus-1-dev libdbus-glib-1-dev
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+    build-essential pkg-config libdbus-1-dev libdbus-glib-1-dev \
+    net-tools curl modemmanager logrotate watchdog && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install python modules
+RUN /usr/local/bin/python3.6 -m pip install --upgrade pip
 RUN pip install wheel
 RUN pip install requests
 RUN pip install python-networkmanager
 
-# Base build completed
-# Deploying final App
-FROM balenalib/%%RESIN_MACHINE_NAME%%-python
-
-MAINTAINER Alexis Susset <alexis@soraocom.io>
-
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-    net-tools curl modemmanager logrotate watchdog libdbus-1-3 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /usr/src/app
 
-# Copy files from builder container
-COPY --from=builder /usr/local/lib/python2.7/site-packages/ /usr/local/lib/python2.7/site-packages/
-
+# Copy main application files
 COPY src/start.sh /usr/src/app
 COPY src/reconnect.sh /usr/src/app
 COPY src/bashrc /root/.bashrc
@@ -33,10 +23,11 @@ COPY src/soracom.py /usr/src/app
 COPY src/nmcli.py /usr/src/app
 COPY src/logrotate.conf /usr/src/app
 
+# Copy ssh keys (for Github Embedded projects download)
 RUN chmod 777 /usr/src/app/start.sh
 RUN chmod 777 /usr/src/app/reconnect.sh
 RUN chmod 777 /usr/bin/entry.sh
-RUN chmod 644 //usr/src/app/logrotate.conf
+RUN chmod 644 /usr/src/app/logrotate.conf
 
 ENV INITSYSTEM off
 
